@@ -8,5 +8,5 @@ from users import views as user_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', user_views.register, name='register'),
-    path('forum/', include('forum.urls', namespace='forum')),
+    path('', include('forum.urls', namespace='forum')),
 ]
