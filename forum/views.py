@@ -32,4 +32,4 @@ def home(request):
 
 def about(request):
     print (request)
-    return render(request, 'forum/about.html')
+    return render(request, 'forum/home2.html')
