@@ -1,0 +1,22 @@
+{% extends "forum/base.html" %}
+{% load static %}
+
+{% block content %}
+<legend class="border-bottom mb-4">Browse by Department</legend>
+    <div class="list-group">
+        {% for content in departments %}
+            {% if content.no_courses != 0 %}
+                <a href="{{ content.department_slug }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <p class="mb-1"><strong>{{ content.department_name }}</strong></p>
+                    <span class="badge badge-primary badge-success">{{ content.no_subject }}</span>
+                </a>
+            {% else %}
+                <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" disabled>
+                    <p class="mb-1"><strong>{{ content.department_name }}</strong></p>
+                    <span class="badge badge-primary badge-warning">{{ content.no_subject }}</span>
+                </a>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}
+
