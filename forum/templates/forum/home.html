@@ -1,15 +1,18 @@
 {% extends "forum/base.html" %}
 {% block content %}
-    {% for post in posts %}
-        <article class="media content-section">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="#">{{ post.author }}</a>
-              <small class="text-muted">{{ post.date_posted }}</small>
+  <div class="jumbotron" >
+      <div class="container">
+          <h1 class="display-4">Prague Student Centre</h1>
+          <p class="lead">Looking to study in Prague? We're here to help!</p>
+          <hr class="my-4">
+            <div class="mb-3">
+              <label class="form-label" for="inlineFormInputGroupUsername2">More coming soon! If you would like to be updated on when the site is live, please provide your contact details below.</label>
+              <div class="input-group mb-4 mr-sm-2">
+                <!-- <label for="exampleFormControlInput1" class="form-label">More coming soon! If you would like to be updated on when the site is live, please provide your contact details below.</label> -->
+                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+              </div>
+              <button type="submit" class="btn btn-primary mb-2">Submit</button>
             </div>
-            <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
-            <p class="article-content">{{ post.content }}</p>
-          </div>
-        </article>
-    {% endfor %}
+      </div>
+    </div>
 {% endblock content %}

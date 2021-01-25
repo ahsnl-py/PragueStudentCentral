@@ -65,9 +65,14 @@ def post_detail(request, year, month, day, post):
 
 # Create your views here.
 def home(request):
-    #print (request)
+    print (request)
     return render(request, 'forum/home.html')
 
 def about(request):
     print (request)
     return render(request, 'forum/about.html')
+
+def forum(request):
+    print (request)
+    return render(request, 'forum/home3.html')
+

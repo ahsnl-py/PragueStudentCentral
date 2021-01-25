@@ -9,6 +9,7 @@ urlpatterns = [
     path('departments/<single_slug>', views.single_slug, name='single_slug'),
     path('about/', views.about, name='forum-about'),
     path('post/', views.post_list, name='forum_post_list'),
+    path('forum/', views.forum, name='forum_page'),
     path('post/<int:year>/<int:month>/<int:day>/<slug:post>/',
          views.post_detail,
          name='post_detail'),
