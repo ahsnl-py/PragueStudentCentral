@@ -2,7 +2,8 @@
 {% load static %}
 
 {% block content %}
-<legend class="border-bottom mb-4">Browse by Department</legend>
+<div class="container">
+    <legend class="border-bottom mb-4">Browse by Department</legend>
     <div class="list-group">
         {% for content in departments %}
             {% if content.no_courses != 0 %}
@@ -18,5 +19,6 @@
             {% endif %}
         {% endfor %}
     </div>
+</div>
 {% endblock %}
 

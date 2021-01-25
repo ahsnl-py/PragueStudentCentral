@@ -3,7 +3,8 @@
 
 
 {% block content %}
-<legend class="border-bottom mb-4">Browse by Courses</legend>
+<div class="container">
+    <legend class="border-bottom mb-4">Browse by Courses</legend>
     <div class="list-group">
         {% for subject, partone in part_ones.items %}
             <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -17,5 +18,6 @@
             </li>
         {% endfor %}
     </div>
+</div>
 {% endblock %}
 
