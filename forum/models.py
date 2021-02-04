@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse 
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.utils.text import slugify 
 
 class Department(models.Model):
     """Department model.
@@ -65,17 +66,21 @@ class Post(models.Model):
     author = models.ForeignKey(User, 
                                on_delete=models.CASCADE,
                                related_name='blog_posts') 
-    body = models.TextField() 
+    body = models.TextField()
     publish = models.DateTimeField(default=timezone.now) 
     created = models.DateTimeField(auto_now_add=True) 
     updated = models.DateTimeField(auto_now=True) 
     status = models.CharField(max_length=10,  
                               choices=STATUS_CHOICES, 
-                              default='draft') 
+                              default='draft')
 
     objects = models.Manager() #default manager
     published = PublishedManager() #Custome manager 
     
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super(Post, self).save(*args, **kwargs)
+
     class Meta: 
         ordering = ('-publish',) 
 
@@ -88,3 +93,14 @@ class Post(models.Model):
                              self.publish.month,
                              self.publish.day,
                              self.slug])
+
+class UploadFiles(models.Model):
+    file_upload = models.FileField(null=True, blank=True, upload_to='post_images/',)
+    feed = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+
+class Notif_User(models.Model):
+    user_email = models.EmailField(max_length=100, unique = True)
+    time = models.DateTimeField(default=timezone.now)
+    def __str__(self): 
+        return self.user_email

@@ -1,7 +1,7 @@
-from django.shortcuts import render
-from django.shortcuts import render, get_object_or_404
-from .models import Post, Department, Subject
-from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Post, Department, Subject, Notif_User, UploadFiles
+from .forms import NewPost, NewPostUploads
+
 
 # Department View
 def departments(request):
@@ -10,14 +10,12 @@ def departments(request):
 
 # Subject and post view
 def single_slug(request, single_slug):
-    print(single_slug) 
     departments = [d.department_slug for d in Department.objects.all()]
     object_list = Post.published.all()
     
     # list all the subjects by department 
     if single_slug in departments:
         matching_subjects = Subject.objects.filter(department_name__department_slug=single_slug)
-        print(matching_subjects)
         
         subject_urls = {}
         for m in matching_subjects.all():
@@ -60,19 +58,43 @@ def post_detail(request, year, month, day, post):
                                 publish__month=month,
                                 publish__day=day,
                             )
-    context = {'post': post}
+
+    files = UploadFiles.objects.filter(feed=post)
+
+    context = {'post': post, 'files': files}
     return render(request, 'forum/detail.html', context)
 
 # Create your views here.
 def home(request):
-    print (request)
+    if request.method == 'POST':
+        data = request.POST['user_email']
+        user_emails = Notif_User(user_email=data)
+        user_emails.save()
+    else:
+        data = Notif_User()
     return render(request, 'forum/home.html')
 
 def about(request):
-    print (request)
     return render(request, 'forum/about.html')
 
-def forum(request):
-    print (request)
-    return render(request, 'forum/home3.html')
 
+def new_post(request):
+    form = NewPost()
+    upload = NewPostUploads()
+    if request.method == 'POST':
+        form = NewPost(request.POST,)
+        upload = NewPostUploads(request.POST, request.FILES)
+        files = request.FILES.getlist('file_upload')
+        if form.is_valid() and upload.is_valid():
+            new_post = form.save(commit=False)
+            new_post.author = request.user
+            new_post.status = 'published'
+            new_post.save()
+            for f in files:
+                file_instance = UploadFiles(file_upload=f, feed=new_post)
+                file_instance.save()
+            return redirect('forum:forum_post_list')
+        else:
+            print('ERROR!!')
+    
+    return render(request, 'forum/new_post.html', {'form':form, 'upload':upload})

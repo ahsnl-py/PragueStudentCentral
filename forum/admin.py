@@ -2,9 +2,11 @@ from django.contrib import admin
 from .models import (
     Post, 
     Department, 
-    Subject 
+    Subject,
     #PostImage,
     #PostFile
+    Notif_User,
+    UploadFiles,
 )
 
 # Department view in admin 
@@ -34,4 +36,11 @@ class PostAdmin(admin.ModelAdmin):
     date_hierarchy = 'publish'
     ordering = ('status', 'publish')
 
+@admin.register(Notif_User)
+class DepartmentAdmin(admin.ModelAdmin):
+    ordering = ('user_email', )
+    # prepopulated_fields = {'department_slug': ('department_name',)}
 
+@admin.register(UploadFiles)
+class DepartmentAdmin(admin.ModelAdmin):
+    ordering = ('file_upload', )

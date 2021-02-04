@@ -2,16 +2,21 @@
 {% block content %}
   <div class="jumbotron" >
       <div class="container">
-          <h1 class="display-4">Prague Student Centre</h1>
+          <h1 class="display-4" style="font-weight: lighter;">Prague Student Centre</h1>
           <p class="lead">Looking to study in Prague? We're here to help!</p>
           <hr class="my-4">
-            <div class="mb-3">
+            <div class="col-6" style="padding-left: 0px;">
               <label class="form-label" for="inlineFormInputGroupUsername2">More coming soon! If you would like to be updated on when the site is live, please provide your contact details below.</label>
-              <div class="input-group mb-4 mr-sm-2">
-                <!-- <label for="exampleFormControlInput1" class="form-label">More coming soon! If you would like to be updated on when the site is live, please provide your contact details below.</label> -->
-                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
-              </div>
-              <button type="submit" class="btn btn-primary mb-2">Submit</button>
+              <!-- <div class="input-group mb-4 mr-sm-2">
+                <input method = "POST" type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+              </div> -->
+              <form method="post">
+                {% csrf_token %}
+                <div class="input-group mb-4 mr-sm-2">
+                  <input name = "user_email" type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+                </div>
+                <button type="submit" class="btn btn-primary mb-2">Submit</button>
+              </form>
             </div>
       </div>
     </div>

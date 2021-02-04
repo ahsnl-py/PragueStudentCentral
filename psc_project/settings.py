@@ -31,15 +31,15 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'forum.apps.ForumConfig',
+    'django.contrib.contenttypes',
     'users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
-    'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
+    'forum.apps.ForumConfig',
 ]
 
 MIDDLEWARE = [
@@ -124,3 +124,6 @@ STATIC_URL = '/static/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'forum:forum-home'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'post_uploads/')
+MEDIA_URL = '/post_uploads/'
