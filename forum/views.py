@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post, Department, Subject, Notif_User, UploadFiles
-from .forms import NewPost, NewPostUploads
+from .forms import NewPost, NewPostUploads, NotifUser
 
 
 # Department View
@@ -66,13 +66,16 @@ def post_detail(request, year, month, day, post):
 
 # Create your views here.
 def home(request):
+    form = NotifUser
     if request.method == 'POST':
-        data = request.POST['user_email']
-        user_emails = Notif_User(user_email=data)
-        user_emails.save()
+        form = NewPost(request.POST,)
+        if form.is_valid():
+            form.save()
+            render(request, 'forum/home.html')
     else:
-        data = Notif_User()
+        print("ERROR!")
     return render(request, 'forum/home.html')
+
 
 def about(request):
     return render(request, 'forum/about.html')

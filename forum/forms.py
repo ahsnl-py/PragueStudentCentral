@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post, UploadFiles
+from .models import Post, UploadFiles, Notif_User
 
 class NewPost(forms.ModelForm):
     class Meta:
@@ -26,6 +26,18 @@ class NewPostUploads(forms.ModelForm):
     class Meta:
         model = UploadFiles
         fields =  ('file_upload',)
+
+        widgets = {
+            'file_upload': forms.ClearableFileInput(attrs={
+                'name':"file",
+                'type':"file",
+                'multiple': True}),
+        }
+
+class NotifUser(forms.ModelForm):
+    class Meta:
+        model = Notif_User
+        fields =  ('user_email',)
 
         widgets = {
             'file_upload': forms.ClearableFileInput(attrs={
