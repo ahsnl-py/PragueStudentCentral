@@ -23,19 +23,26 @@ def single_slug(request, single_slug):
                 part_one = object_list.filter(subject_name__subject_name=m.subject_name).earliest('publish')
                 subject_urls[m] = part_one.slug
             except Exception: 
-                pass 
+                pass
 
         return render(request, "forum/subjects_by_department.html", {'m': matching_subjects, "part_ones": subject_urls})
 
     # list all the post by the subject 
+    
     post = [p.slug for p in object_list]
     if single_slug in post:
         posts = get_object_or_404(Post, slug=single_slug)
         post_from_subjects = Post.published.filter(subject_name__subject_name=posts.subject_name)
-        
         this_post_idx = list(post_from_subjects).index(posts)
 
-        return render(request, 'forum/discussion.html', {'post': posts, 'list_post_subjects': post_from_subjects, 'this_post_idx': this_post_idx})
+        context = {
+            'post': posts
+            ,'list_post_subjects': post_from_subjects 
+            ,'this_post_idx': this_post_idx
+            ,'subject_name': posts.subject_name
+        } 
+        #print(context)
+        return render(request, 'forum/discussion.html', context)
 
     return HttpResponse(f"'{single_slug}' is not registesred!'")
 
@@ -64,7 +71,7 @@ def post_detail(request, year, month, day, post):
     context = {'post': post, 'files': files}
     return render(request, 'forum/detail.html', context)
 
-# Create your views here.
+# View home
 def home(request):
     form = NotifUser
     if request.method == 'POST':
