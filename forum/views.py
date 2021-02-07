@@ -3,6 +3,22 @@ from .models import Post, Department, Subject, Notif_User, UploadFiles
 from .forms import NewPost, NewPostUploads, NotifUser
 
 
+# View home
+def home(request):
+    form = NotifUser
+    if request.method == 'POST':
+        form = NewPost(request.POST,)
+        if form.is_valid():
+            form.save()
+            render(request, 'forum/home.html')
+    else:
+        print("ERROR!")
+    return render(request, 'forum/home.html')
+
+# About view
+def about(request):
+    return render(request, 'forum/about.html')
+
 # Department View
 def departments(request):
     departments = Department.objects.all()
@@ -28,7 +44,6 @@ def single_slug(request, single_slug):
         return render(request, "forum/subjects_by_department.html", {'m': matching_subjects, "part_ones": subject_urls})
 
     # list all the post by the subject 
-    
     post = [p.slug for p in object_list]
     if single_slug in post:
         posts = get_object_or_404(Post, slug=single_slug)
@@ -49,11 +64,7 @@ def single_slug(request, single_slug):
 # List of post 
 def post_list(request):
     posts = Post.published.all()
-    context = {
-                'posts': posts
-              }
-    posts = Post.published.all()
-    return render(request, 'forum/list.html', context)
+    return render(request, 'forum/list.html', {'posts': posts})
 
 # Detail post 
 def post_detail(request, year, month, day, post):
@@ -65,29 +76,33 @@ def post_detail(request, year, month, day, post):
                                 publish__month=month,
                                 publish__day=day,
                             )
-
     files = UploadFiles.objects.filter(feed=post)
-
-    context = {'post': post, 'files': files}
+    context = {
+        'post': post, 
+        'files': files
+    }
     return render(request, 'forum/detail.html', context)
 
-# View home
-def home(request):
-    form = NotifUser
-    if request.method == 'POST':
-        form = NewPost(request.POST,)
-        if form.is_valid():
-            form.save()
-            render(request, 'forum/home.html')
-    else:
-        print("ERROR!")
-    return render(request, 'forum/home.html')
+"""Test detailed page"""
+def TEST_post_detail(request, year, month, day, post):
+    post = get_object_or_404(
+                                Post, 
+                                slug=post,
+                                status='published',
+                                publish__year=year,
+                                publish__month=month,
+                                publish__day=day,
+    )
+    files = UploadFiles.objects.filter(feed=post)
+    context = {
+        'post': post, 
+        'files': files
+    }
+    return render(request, 'forum/detailed_2.html', context)
 
 
-def about(request):
-    return render(request, 'forum/about.html')
 
-
+#Create new post view
 def new_post(request):
     form = NewPost()
     upload = NewPostUploads()
