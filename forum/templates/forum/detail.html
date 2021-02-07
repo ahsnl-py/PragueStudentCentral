@@ -1,5 +1,6 @@
 {% extends "forum/base.html" %}
 {% block title %}{{ post.title }}{% endblock %}
+
 {% block content %}
 <div class="container">
   <article class="media content-section">
@@ -49,7 +50,6 @@
               </a>
             {% endif %}
           </div>
-          <br>
         {% endif %}
 
         {{ post.body|linebreaks }}

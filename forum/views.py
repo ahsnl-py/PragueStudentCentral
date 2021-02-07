@@ -3,6 +3,22 @@ from .models import Post, Department, Subject, Notif_User, UploadFiles
 from .forms import NewPost, NewPostUploads, NotifUser
 
 
+# View home
+def home(request):
+    form = NotifUser
+    if request.method == 'POST':
+        form = NewPost(request.POST,)
+        if form.is_valid():
+            form.save()
+            render(request, 'forum/home.html')
+    else:
+        print("ERROR!")
+    return render(request, 'forum/home.html')
+
+# About view
+def about(request):
+    return render(request, 'forum/about.html')
+
 # Department View
 def departments(request):
     departments = Department.objects.all()
@@ -23,7 +39,7 @@ def single_slug(request, single_slug):
                 part_one = object_list.filter(subject_name__subject_name=m.subject_name).earliest('publish')
                 subject_urls[m] = part_one.slug
             except Exception: 
-                pass 
+                pass
 
         return render(request, "forum/subjects_by_department.html", {'m': matching_subjects, "part_ones": subject_urls})
 
@@ -32,21 +48,23 @@ def single_slug(request, single_slug):
     if single_slug in post:
         posts = get_object_or_404(Post, slug=single_slug)
         post_from_subjects = Post.published.filter(subject_name__subject_name=posts.subject_name)
-        
         this_post_idx = list(post_from_subjects).index(posts)
 
-        return render(request, 'forum/discussion.html', {'post': posts, 'list_post_subjects': post_from_subjects, 'this_post_idx': this_post_idx})
+        context = {
+            'post': posts
+            ,'list_post_subjects': post_from_subjects 
+            ,'this_post_idx': this_post_idx
+            ,'subject_name': posts.subject_name
+        } 
+        #print(context)
+        return render(request, 'forum/discussion.html', context)
 
     return HttpResponse(f"'{single_slug}' is not registesred!'")
 
 # List of post 
 def post_list(request):
     posts = Post.published.all()
-    context = {
-                'posts': posts
-              }
-    posts = Post.published.all()
-    return render(request, 'forum/list.html', context)
+    return render(request, 'forum/list.html', {'posts': posts})
 
 # Detail post 
 def post_detail(request, year, month, day, post):
@@ -58,29 +76,33 @@ def post_detail(request, year, month, day, post):
                                 publish__month=month,
                                 publish__day=day,
                             )
-
     files = UploadFiles.objects.filter(feed=post)
-
-    context = {'post': post, 'files': files}
+    context = {
+        'post': post, 
+        'files': files
+    }
     return render(request, 'forum/detail.html', context)
 
-# Create your views here.
-def home(request):
-    form = NotifUser
-    if request.method == 'POST':
-        form = NewPost(request.POST,)
-        if form.is_valid():
-            form.save()
-            render(request, 'forum/home.html')
-    else:
-        print("ERROR!")
-    return render(request, 'forum/home.html')
+"""Test detailed page"""
+def TEST_post_detail(request, year, month, day, post):
+    post = get_object_or_404(
+                                Post, 
+                                slug=post,
+                                status='published',
+                                publish__year=year,
+                                publish__month=month,
+                                publish__day=day,
+    )
+    files = UploadFiles.objects.filter(feed=post)
+    context = {
+        'post': post, 
+        'files': files
+    }
+    return render(request, 'forum/detailed_2.html', context)
 
 
-def about(request):
-    return render(request, 'forum/about.html')
 
-
+#Create new post view
 def new_post(request):
     form = NewPost()
     upload = NewPostUploads()

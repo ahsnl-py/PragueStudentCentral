@@ -2,8 +2,13 @@
 {% block title %}Forum{% endblock %}
 
 {% block content %}
+<header class="p-3 mb-2 bg-info text-white">
+    <div class="container text-center">
+      <h1>Forum</h1>
+    </div>
+</header>
+
 <div class="container">
-    <h1>Forum</h1>
         {% if user.is_authenticated %}
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
             <a class="btn btn-outline-primary" href="{% url 'forum:new_post' %}" role="button">New Post</a>
