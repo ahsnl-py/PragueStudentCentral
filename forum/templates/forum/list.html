@@ -9,29 +9,33 @@
 </header>
 
 <div class="container">
-        {% if user.is_authenticated %}
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <a class="btn btn-outline-primary" href="{% url 'forum:new_post' %}" role="button">New Post</a>
+    <div class="row justify-content-between">
+        <div class="col-4">
+            <h1>Forum</h1>
         </div>
+        {% if user.is_authenticated %}
+            <div class="col-auto align-self-center">
+            <a class="btn btn-outline-primary" href="{% url 'forum:new_post' %}" role="button">New Post</a>
+            </div>
         {% endif %}
-
-        {% for post in posts %}
-            <div class="card" style="margin: 10px 0px 10px 0px;">
-                <div class="card-header">
-                    <div class="article-metadata">
-                        <a class="mr-2" href="#">{{ post.author }}</a>  
-                        <small class="text-muted">{{ post.publish|date:"F d, Y" }}</small> 
-                    </div>
-                </div>
-                <div class="card-body fd" style="padding-left: 50px;">
-                    <h2>
-                        <a class="article-title" href="{{ post.get_absolute_url }}">{{ post.title }}</a>
-                    </h2>
-                  <p class="card-text">{{ post.body|truncatewords:30|linebreaks }}</p>
-                  <p class='tags'>Tags: {{ post.tags.all|join:", " }} </p>
+    </div>
+    <p></p>
+    {% for post in posts %}
+        <div class="card" style="margin: 10px 0px 10px 0px;">
+            <div class="card-header">
+                <div class="article-metadata">
+                    <a class="mr-2" href="#">{{ post.author }}</a>  
+                    <small class="text-muted">{{ post.publish|date:"F d, Y" }}</small> 
                 </div>
             </div>
-
-        {% endfor %}
+            <div class="card-body fd" style="padding-left: 50px;">
+                <h2>
+                    <a class="article-title" href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                </h2>
+                <p class="card-text">{{ post.body|truncatewords:30|linebreaks }}</p>
+                <p class='tags'>Tags: {{ post.tags.all|join:", " }} </p>
+            </div>
+        </div>
+    {% endfor %}
 </div>
 {% endblock %}

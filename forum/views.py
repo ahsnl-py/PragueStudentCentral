@@ -100,9 +100,6 @@ def TEST_post_detail(request, year, month, day, post):
     }
     return render(request, 'forum/detailed_2.html', context)
 
-
-
-#Create new post view
 def new_post(request):
     form = NewPost()
     upload = NewPostUploads()
