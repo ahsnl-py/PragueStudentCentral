@@ -27,9 +27,9 @@
               <li class="dropdown">
                 <a href="{% url 'forum:departments' %}" class="nav-item nav-link" data-toggle="dropdown">Departments</a>
                 <div class="dropdown-menu">
-                  {% for department in departments %}
-                    <a href="{{ department.department_slug }}" class="dropdown-item">{{ department.department_name }}</a>
-                  {% endfor %}
+                  <!-- {% for department in departments %}
+                    <a href="{{ department.get_absolute_url }}" class="dropdown-item">{{ department.department_name }}</a>
+                  {% endfor %} -->
                 </div>
               </li>
               <li><a href="{% url 'forum:forum_post_list' %}" class="nav-item nav-link">Forum</a></li>

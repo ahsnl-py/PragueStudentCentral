@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post, Department, Subject, Notif_User, UploadFiles
 from .forms import NewPost, NewPostUploads, NotifUser
-
+from django.http import HttpResponse
 
 # View home
 def home(request):
@@ -12,17 +12,18 @@ def home(request):
             form.save()
             render(request, 'forum/home.html')
     else:
-        print("ERROR!")
+        print("** ERROR! **")
     return render(request, 'forum/home.html')
 
 # About view
 def about(request):
     return render(request, 'forum/about.html')
 
-# Department View
+# # Department View
 def departments(request):
     departments = Department.objects.all()
     return render(request, 'forum/department.html', {'departments': departments})
+
 
 # Subject and post view
 def single_slug(request, single_slug):
@@ -40,8 +41,9 @@ def single_slug(request, single_slug):
                 subject_urls[m] = part_one.slug
             except Exception: 
                 pass
-
-        return render(request, "forum/subjects_by_department.html", {'m': matching_subjects, "part_ones": subject_urls})
+        context = {'m': matching_subjects, "part_ones": subject_urls}
+        print(context)
+        return render(request, "forum/subjects_by_department.html", context)
 
     # list all the post by the subject 
     post = [p.slug for p in object_list]
@@ -54,9 +56,8 @@ def single_slug(request, single_slug):
             'post': posts
             ,'list_post_subjects': post_from_subjects 
             ,'this_post_idx': this_post_idx
-            ,'subject_name': posts.subject_name
         } 
-        #print(context)
+        print(context)
         return render(request, 'forum/discussion.html', context)
 
     return HttpResponse(f"'{single_slug}' is not registesred!'")
@@ -117,6 +118,6 @@ def new_post(request):
                 file_instance.save()
             return redirect('forum:forum_post_list')
         else:
-            print('ERROR!!')
+            pass
     
     return render(request, 'forum/new_post.html', {'form':form, 'upload':upload})
