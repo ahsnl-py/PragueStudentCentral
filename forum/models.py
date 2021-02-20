@@ -19,7 +19,7 @@ class Department(models.Model):
         return self.department_name 
 
     def get_absolute_url(self):
-        return reverse('forum:single_slug', kwargs={"single_slug" : self.department_slug})
+        return reverse('forum:subject', kwargs={"dept_id" : self.id})
 
 #Course or Subject Model
 class Subject(models.Model):
@@ -30,8 +30,8 @@ class Subject(models.Model):
     def __str__(self):
         return self.subject_name
 
-    # def get_absolute_url(self):
-    #     return reverse('forum:single_slug', kwargs={"single_slug" : self.department_slug})
+    def get_absolute_url(self):
+        return reverse('forum:post_by_subject', args=[self.department_name_id, self.id])
 
 
 #Post manager -- Filter out views only by published post 
