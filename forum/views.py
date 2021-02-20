@@ -49,7 +49,7 @@ def subject_dept(request, dept_id):
         return render(request, "forum/subjects_by_department.html", context)
 
     else:
-        return HttpResponse('Department does not exists')
+        return HttpResponse('Department does not exists!')
 
 # Post View by Subjects
 def post_subject_dept(request, dept_id, subject_name_id):
@@ -67,7 +67,7 @@ def post_subject_dept(request, dept_id, subject_name_id):
         
         return render(request, 'forum/discussion.html', context)
     else:
-        return HttpResponse('Department does not exists')
+        return HttpResponse('Subject does not exists!')
 
 # List of post 
 def post_list(request):

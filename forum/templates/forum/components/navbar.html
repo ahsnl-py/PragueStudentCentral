@@ -1,0 +1,53 @@
+<!--Navbar block-->
+<header class="header-area overlay">
+    <nav class="navbar navbar-expand-md navbar-dark" style="height: 60px;">
+        <div class="container">
+          
+          <!--Logo nav button-->
+          <a href="#" class="navbar-brand">PSC</a>
+          
+          <!--Right side nav's-->
+          <div id="main-nav" class="collapse navbar-collapse">
+            <ul class="navbar-nav mr">
+              <li><a href="{% url 'forum:forum-home' %}" class="nav-item nav-link">Home</a></li>
+              <li><a href="{% url 'forum:forum-about' %}" class="nav-item nav-link">About Us</a></li>
+              <li class="dropdown">
+                <a href="{% url 'forum:departments' %}" class="nav-item nav-link" data-toggle="dropdown">Departments</a>
+                <div class="dropdown-menu">
+                  {% for department in departments %}
+                    <a href="{{ department.get_absolute_url }}" class="dropdown-item">{{ department.department_name }}</a>
+                  {% endfor %}
+                </div>
+              </li>
+              <li><a href="{% url 'forum:forum_post_list' %}" class="nav-item nav-link">Forum</a></li>
+            </ul>
+          </div>
+  
+          <!--left side nav's-->
+          <div id="main-nav" class="collapse navbar-collapse">
+  
+            <!--Search nav-->
+            <div class="searchbar" style="padding-left: 100px;">
+              <form onsubmit="event.preventDefault();" role="search" class="searchbar">
+                <input id="search" type="search" placeholder="Search..." autofocus required />
+                <button type="submit" class="btn btn-primary">Go</button>    
+              </form>
+            </div>
+  
+            <!--User option nav's-->
+            <ul class="navbar-nav ml-auto">
+              {% if user.is_authenticated %}
+                <li><a class="nav-item nav-link" href="#">Profile</a></li>
+                <li><a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a></li>
+              {% else %}
+                <li><a class="nav-item nav-link" href="{% url 'login' %}">Login</a></li>
+                <li><a class="nav-item nav-link" href="{% url 'register' %}">Register</a></li>
+              {% endif %}
+            </ul>
+  
+          </div>
+        </div>
+      </nav>
+      
+  </header>
+  
