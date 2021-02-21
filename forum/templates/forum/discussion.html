@@ -3,18 +3,9 @@
 {% block title %}Forum{% endblock %}
 
 {% block content %}
-
-<!---->
-<header class="p-3 mb-2 bg-info text-white">
-  <div class="container text-center">
-    <h1>{{subject_name}}</h1>
-    <p class="card-text">All forum post by {{subject_name}}</p>
-  </div>
-</header>
-
-
+<!--List all post by subject name-->
 <div class="container">
-  {% for post in  list_post_subjects %}
+  {% for post in posts_by_subjects %}
   <div class="card" style="margin: 10px 0px 10px 0px;">
     <div class="card-header">
         <div class="article-metadata">
