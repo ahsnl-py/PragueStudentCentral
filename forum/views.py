@@ -70,25 +70,6 @@ def post_list(request):
     posts = Post.published.all()
     return render(request, 'forum/list.html', {'posts': posts})
 
-# Detail post 
-def post_detail(request, year, month, day, post):
-    post = get_object_or_404(
-                                Post, 
-                                slug=post,
-                                status='published',
-                                publish__year=year,
-                                publish__month=month,
-                                publish__day=day,
-                            )
-    files = UploadFiles.objects.filter(feed=post)
-    context = {
-        'post': post, 
-        'files': files
-    }
-    return render(request, 'forum/detail.html', context)
-
-
-
 class PostDetailView(DetailView):
     template_name = 'forum/detailed_2.html'
     model = Post
@@ -174,80 +155,3 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             return redirect('forum:new_post')
     
 
-""" OLD CODE """
-
-# def new_post(request):
-#     form = NewPost()
-#     upload = NewPostUploads()
-#     if request.method == 'POST':
-#         form = NewPost(request.POST,)
-#         upload = NewPostUploads(request.POST, request.FILES)
-#         files = request.FILES.getlist('file_upload')
-#         if form.is_valid() and upload.is_valid():
-#             new_post = form.save(commit=False)
-#             new_post.author = request.user
-#             new_post.status = 'published'
-#             new_post.save()
-#             for f in files:
-#                 file_instance = UploadFiles(file_upload=f, feed=new_post)
-#                 file_instance.save()
-#             return redirect('forum:forum_post_list')
-#         else:
-#             pass
-    
-#     return render(request, 'forum/new_post.html', {'form':form, 'upload':upload})
-
-# """Test detailed page"""
-# def TEST_post_detail(request, year, month, day, post):
-#     post = get_object_or_404(
-#                                 Post, 
-#                                 slug=post,
-#                                 status='published',
-#                                 publish__year=year,
-#                                 publish__month=month,
-#                                 publish__day=day,
-#     )
-#     files = UploadFiles.objects.filter(feed=post)
-#     context = {
-#         'post': post, 
-#         'files': files
-#     }
-#     return render(request, 'forum/detailed_2.html', context)
-
-# def subject_by_department(request, dept_slug):
-#     print(request, dept_slug)
-#     departments = [d.department_slug for d in Department.objects.all()]
-#     # list all the subjects by department 
-#     if dept_slug in departments:
-#         matching_subjects = Subject.objects.filter(department_name__department_slug=dept_slug)
-#         subject_urls = {}
-#         for m in matching_subjects.all():
-#             try:
-#                 part_one = Post.published.all().filter(subject_name__subject_name=m.subject_name).earliest('publish')
-#                 subject_urls[m] = part_one.slug
-#             except Exception: 
-#                 pass 
-
-#         return render(request, "forum/subjects_by_department.html", {'subject_name': matching_subjects, "part_ones": subject_urls})    
-    
-    # post = [p.slug for p in Post.published.all()]
-    # if dept_slug in post:
-    #     posts = get_object_or_404(Post, slug=dept_slug)
-    #     post_from_subjects = Post.published.filter(subject_name__subject_name=posts.subject_name)
-        
-    #     this_post_idx = list(post_from_subjects).index(posts)
-
-    #     return render(request, 'forum/discussion.html', {'post': posts, 'list_post_subjects': post_from_subjects, 'this_post_idx': this_post_idx})
-
-    # return HttpResponse(f"'{dept_slug}' is not registesred!'")
-
-# Subject View
-# class UserPostListView(ListView):
-#     model = Subject
-#     template_name = 'forum/subjects_by_department.html'
-#     context_object_name = 'subjects'
-
-#     def get(self, request):
-#         matching_subjects = Subject.objects.filter(department_name__department_slug=single_slug)
-#         user = get_object_or_404(User, username=self.kwargs.get('username'))
-#         return Post.published.filter(author=user).order_by('-publish')
