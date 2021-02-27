@@ -2,13 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post, Department, Subject, Notif_User, UploadFiles
 from .forms import NewPost, NewPostUploads, NotifUser
 from django.http import HttpResponse
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
-    #CreateView, 
-    #DetailView, 
-    #UpdateView, 
-    #DeleteView,
-    ListView
-    #FormView
+    CreateView, DetailView, UpdateView, DeleteView, ListView, #FormView
 )
 
 # View home
@@ -91,45 +87,133 @@ def post_detail(request, year, month, day, post):
     }
     return render(request, 'forum/detail.html', context)
 
-"""Test detailed page"""
-def TEST_post_detail(request, year, month, day, post):
-    post = get_object_or_404(
-                                Post, 
-                                slug=post,
-                                status='published',
-                                publish__year=year,
-                                publish__month=month,
-                                publish__day=day,
-    )
-    files = UploadFiles.objects.filter(feed=post)
-    context = {
-        'post': post, 
-        'files': files
-    }
-    return render(request, 'forum/detailed_2.html', context)
 
-def new_post(request):
-    form = NewPost()
-    upload = NewPostUploads()
-    if request.method == 'POST':
-        form = NewPost(request.POST,)
-        upload = NewPostUploads(request.POST, request.FILES)
+
+class PostDetailView(DetailView):
+    template_name = 'forum/detailed_2.html'
+    model = Post
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    template_name = 'forum/delete_post.html'
+    model = Post
+    success_url = '/post/'
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
+
+class PostCreateView(LoginRequiredMixin, CreateView):
+    login_url= "/login/"
+    template_name = 'forum/new_post.html'
+    model = Post
+    form_class = NewPost
+    second_form_class = NewPostUploads
+    context_object_name = 'form'
+
+    def get_context_data(self, **kwargs):
+        context = super(PostCreateView, self).get_context_data(**kwargs)
+        context['form2'] = self.second_form_class()
+        context['title'] = 'Create Post'
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        form2 = self.second_form_class(request.POST, request.FILES)
         files = request.FILES.getlist('file_upload')
-        if form.is_valid() and upload.is_valid():
+        if form.is_valid() and form2.is_valid():
             new_post = form.save(commit=False)
             new_post.author = request.user
             new_post.status = 'published'
             new_post.save()
+            print(files)
             for f in files:
                 file_instance = UploadFiles(file_upload=f, feed=new_post)
                 file_instance.save()
             return redirect('forum:forum_post_list')
         else:
-            pass
+            return redirect('forum:new_post')
+
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    login_url= "/login/"
+    template_name = 'forum/new_post.html'
+    model = Post
+    form_class = NewPost
+    second_form_class = NewPostUploads
     
-    return render(request, 'forum/new_post.html', {'form':form, 'upload':upload})
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
+
+    def get_context_data(self, **kwargs):
+        context = super(PostUpdateView, self).get_context_data(**kwargs)
+        post = self.get_object()
+        context['form2'] = self.second_form_class(instance=post)
+        context['title'] = 'Edit Post'
+        return context
+
+    def post(self, request, *args, **kwargs):
+        post = self.get_object()
+        form = self.form_class(request.POST, instance=post)
+        form2 = self.second_form_class(request.POST, request.FILES)
+        files = request.FILES.getlist('file_upload')
+        if form.is_valid() and form2.is_valid():
+            new_post = form.save(commit=False)
+            new_post.author = request.user
+            new_post.status = 'published'
+            new_post.save()
+            print(files)
+            for f in files:
+                file_instance = UploadFiles(file_upload=f, feed=new_post)
+                file_instance.save()
+            return redirect('forum:post_detail', post.id, post.slug)
+        else:
+            return redirect('forum:new_post')
+    
 
 """ OLD CODE """
+
+# def new_post(request):
+#     form = NewPost()
+#     upload = NewPostUploads()
+#     if request.method == 'POST':
+#         form = NewPost(request.POST,)
+#         upload = NewPostUploads(request.POST, request.FILES)
+#         files = request.FILES.getlist('file_upload')
+#         if form.is_valid() and upload.is_valid():
+#             new_post = form.save(commit=False)
+#             new_post.author = request.user
+#             new_post.status = 'published'
+#             new_post.save()
+#             for f in files:
+#                 file_instance = UploadFiles(file_upload=f, feed=new_post)
+#                 file_instance.save()
+#             return redirect('forum:forum_post_list')
+#         else:
+#             pass
+    
+#     return render(request, 'forum/new_post.html', {'form':form, 'upload':upload})
+
+# """Test detailed page"""
+# def TEST_post_detail(request, year, month, day, post):
+#     post = get_object_or_404(
+#                                 Post, 
+#                                 slug=post,
+#                                 status='published',
+#                                 publish__year=year,
+#                                 publish__month=month,
+#                                 publish__day=day,
+#     )
+#     files = UploadFiles.objects.filter(feed=post)
+#     context = {
+#         'post': post, 
+#         'files': files
+#     }
+#     return render(request, 'forum/detailed_2.html', context)
+
 # def subject_by_department(request, dept_slug):
 #     print(request, dept_slug)
 #     departments = [d.department_slug for d in Department.objects.all()]

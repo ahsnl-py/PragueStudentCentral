@@ -43,4 +43,5 @@ class DepartmentAdmin(admin.ModelAdmin):
 
 @admin.register(UploadFiles)
 class DepartmentAdmin(admin.ModelAdmin):
+    list_display = ('feed', 'file_upload')
     ordering = ('file_upload', )

@@ -7,9 +7,9 @@
       <div class="col-4">
         <h1>Profile</h1>
       </div>
-      {% if user.is_authenticated %}
+      {% if user.id == user_info.id %}
         <div class="col-auto align-self-center">
-          <a class="btn btn-outline-primary" href="{% url 'profile-edit' %}" role="button">Edit Profile</a>
+          <a class="btn btn-outline-primary" href="{% url 'update_profile' user.id user.username%}" role="button">Edit Profile</a>
         </div>
       {% endif %}
     </div>
@@ -20,11 +20,15 @@
               <div class="card">
                 <div class="card-body">
                   <div class="d-flex flex-column align-items-center text-center">
-                    <img src="{% static 'forum/images/profile_pic.png' %}" alt="Admin" class="rounded-circle" width="150">
+                    {% if user_profile.user_picture %}
+                      <img src="{{ user_profile.user_picture.url }}" alt="Admin" class="rounded-circle" width="150" height="150" style="object-fit:contain">
+                    {% else %}
+                      <img src="{% static 'forum/images/profile_pic.png' %}" alt="Admin" class="rounded-circle" width="150" height="150" style="object-fit: contain">
+                    {% endif %}
                     <div class="mt-3">
-                      <h4>{{ user.username }}</h4>
+                      <h4>{{ user_info.username }}</h4>
                       <p class="text-secondary mb-1">{{ user_profile.user_department }}</p>
-                      <p class="text-muted font-size-sm">Last logged in {{ user.last_login|timesince }} ago</p>
+                      <p class="text-muted font-size-sm">Last logged in {{ user_info.last_login|timesince }} ago</p>
                       <button class="btn btn-primary">Follow</button>
                       <button class="btn btn-outline-primary">Message</button>
                     </div>
@@ -64,7 +68,7 @@
                       <h6 class="mb-0">First Name</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                        {{ user.first_name }} 
+                        {{ user_info.first_name }} 
                     </div>
                   </div>
                   <hr>
@@ -73,7 +77,7 @@
                       <h6 class="mb-0">Last Name</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                        {{ user.last_name }}
+                        {{ user_info.last_name }}
                     </div>
                   </div>
                   <hr>
@@ -82,7 +86,7 @@
                       <h6 class="mb-0">Email</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                        {{ user.email }}
+                        {{ user_info.email }}
                     </div>
                   </div>
                   <hr>
@@ -97,10 +101,19 @@
                   <hr>
                   <div class="row">
                     <div class="col-sm-3">
+                      <h6 class="mb-0">Status</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      {{ user_profile.status }}
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
                       <h6 class="mb-0">Date Joined</h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                      {{ user.date_joined }}
+                      {{ user_info.date_joined }}
                     </div>
                   </div>
                 </div>
@@ -113,9 +126,8 @@
                       <h5 class="d-flex align-items-center mb-3">Recent Activity</h5>
                       {% if number_of_posts > 0 %}
                         {% for post in posts %}
-                          <p>Created a post on 
-                            <a href="#" class="badge badge-secondary">{{ post.subject_name }}</a>
-                             : <a href="#" class="badge badge-primary">{{ post.title }}</a>
+                          <p>Created a post on {{ post.subject_name }}: 
+                            <a href="{{ post.get_absolute_url }}" class="badge badge-primary">{{ post.title }}</a>
                               {{ post.created|timesince }} ago</p>
                         {% endfor %}
                         {% if number_of_posts > 5 %}

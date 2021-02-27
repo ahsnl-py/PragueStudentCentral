@@ -3,7 +3,6 @@
 
 {% block content %}
   <div class="container">
-
     <div class="row">
 
       <!-- Post Content Column -->
@@ -11,23 +10,37 @@
 
         <!-- Title -->
         <h1 class="mt-4">{{ post.title }}</h1>
+        <div class="row">
+          <div class="col">
+            <!-- Author -->
+            <p class="lead">
+              by
+              <a href="#">{{ post.author }}</a>
+            </p>
+          </div>
+          <div class="col-auto">
+              {% if post.author == user %}
+              <div class="col align-self-end">
+                <div class="col-auto-right align-self-center">
+                  <a class="btn btn-outline-primary" href="{% url 'forum:update_post' post.id post.slug%}" role="button">Edit Post</a>
+                  <a class="btn btn-outline-danger" href="{% url 'forum:delete_post' post.id post.slug%}" role="button">Delete Post</a>
+                </div>
+              </div>
+              {% endif %}
+          </div>
+        </div> 
 
-        <!-- Author -->
-        <p class="lead">
-          by
-          <a href="#">{{ post.author }}</a>
-        </p>
 
-        <hr>
+        <!-- <hr> -->
 
         <!-- Date/Time -->
         <small class="text-muted">Published on {{ post.publish|date:"F d, Y" }}</small> 
 
-        <hr>
-
+      
         <!-- Preview Image: <img class="img-fluid rounded" src="http://placehold.it/900x300" alt="">-->
         <div class="carousel-inner" style="background-color: rgb(117, 117, 117);">
             {% for file in files %}
+              <hr>
               {% if forloop.first %}
                 <div class="carousel-item active">
                   <img class="d-block w-100" src="{{ file.file_upload.url }}" alt="Slide {{ forloop.counter }}" style="height: 30rem; object-fit: contain;">
@@ -44,7 +57,7 @@
 
         <hr>
         <!-- Post Content -->
-        {{ post.body|linebreaks }}
+        {{ post.body|safe|linebreaks }}
         <hr>
 
         <!-- Comments Form -->

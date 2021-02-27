@@ -17,7 +17,8 @@ class NewPost(forms.ModelForm):
             'body': forms.Textarea(attrs={
                 'name':"post_text",
                 'type':"text",
-                'class':"form-control",
+                # 'class':"editable medium-editor-textarea",
+                'class': "form-control",
                 'id':"exampleFormControlTextarea1",
                 'placeholder':"Text",}),
         }
@@ -40,7 +41,7 @@ class NotifUser(forms.ModelForm):
         fields =  ('user_email',)
 
         widgets = {
-            'file_upload': forms.ClearableFileInput(attrs={
+            'user_email': forms.ClearableFileInput(attrs={
                 'name':"file",
                 'type':"file",
                 'multiple': True}),
