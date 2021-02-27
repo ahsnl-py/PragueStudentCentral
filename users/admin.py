@@ -7,4 +7,5 @@ from .models import (
 
 @admin.register(UserProfile)
 class DepartmentAdmin(admin.ModelAdmin):
-    ordering = ('user_department', )
+    list_display = ('user','user_department')
+    readonly_fields=('id',)

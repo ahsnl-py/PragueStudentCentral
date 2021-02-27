@@ -10,27 +10,22 @@
 
 {% block content %}
 <div class="container">
-    <h1>Create a post</h1>
-    <form method="post" enctype="multipart/form-data">
+    <h1>{{ title }}</h1>
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.subject_name }}
-
-         <div class="mb-3">
-            {{ form.title }}
-        </div>
-        <div class="mb-3">
-            {{ form.body }}
-        </div>
+        {{ form|crispy }}
+        {{ form2|crispy }}
         <!-- <div action = "/" class="dropzone mb-3 dz" id='my-upload'> -->
-        <div class="dropzone mb-3 dz" id='my-upload'>
+        <!-- <div class="dropzone mb-3 dz" id='my-upload'>
             <div class="fallback">
               <input name="file" type="file" multiple />
-              <!-- {{ upload.file_upload }}
+              {{ upload.file_upload }}
               {{ upload.errors }}
-              {{ upload.non_field_errors }} -->
+              {{ upload.non_field_errors }}
             </div>
-        </div> 
+        </div>  -->
         <button type="submit" class="btn btn-primary mb-2">Submit</button>
     </form>
+    <script>var editor = new MediumEditor('.editable');</script>
 </div>
 {% endblock %}

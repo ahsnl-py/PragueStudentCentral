@@ -37,7 +37,7 @@
             <!--User option nav's-->
             <ul class="navbar-nav ml-auto">
               {% if user.is_authenticated %}
-                <li><a class="nav-item nav-link" href="#">Profile</a></li>
+                <li><a class="nav-item nav-link" href="{% url 'profile' user.pk user.username %}">Profile</a></li>
                 <li><a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a></li>
               {% else %}
                 <li><a class="nav-item nav-link" href="{% url 'login' %}">Login</a></li>

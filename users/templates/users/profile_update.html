@@ -8,14 +8,14 @@
     <div class="card mb-3">
         <div class="card-body">
             <div class="card-body">
-                <form method="post" enctype="multipart/form-data">
+                <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-sm-3">
                         <h6 class="mb-0">User Name</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                            {{ user.username }} 
+                            {{ user.username }}
                         </div>
                     </div>
                     <hr>
@@ -24,7 +24,7 @@
                         <h6 class="mb-0">First Name</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                            {{ user_form.first_name }} 
+                            {{ form.first_name }}
                         </div>
                     </div>
                     <hr>
@@ -33,7 +33,7 @@
                         <h6 class="mb-0">Last Name</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                            {{ user_form.last_name }}
+                            {{ form.last_name }}
                         </div>
                     </div>
                     <hr>
@@ -42,7 +42,7 @@
                         <h6 class="mb-0">Email</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                            {{ user_form.email }}
+                            {{ form.email }}
                         </div>
                     </div>
                     <hr>
@@ -51,7 +51,16 @@
                         <h6 class="mb-0">Department</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                            {{ profile_form.user_department }}
+                            {{ form2.user_department }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                        <h6 class="mb-0">Status</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            {{ form2.status }}
                         </div>
                     </div>
                     <hr>
@@ -60,16 +69,16 @@
                         <h6 class="mb-0">Profile Picture</h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                            {{ profile_form.user_picture }}
+                            {{ form2.user_picture }}
                         </div>
                     </div>
                     <hr>
                     <div class="row justify-content-between">
                         <div class="col-4">
-                            <button type="submit" class="btn btn-primary mb-2">Save</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
                         </div>
                         <div class="col-auto">
-                            <button class="btn btn-outline-danger">Delete Profile</button>
+                            <a class="btn btn-outline-danger" href="{% url 'delete_profile' user.id user.username%}">Delete Profile</a>
                         </div>
                     </div>
                 </form>
