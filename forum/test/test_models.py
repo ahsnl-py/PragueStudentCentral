@@ -24,7 +24,7 @@ class TestModels(TestCase):
                                         , body = "this is by test"
                                         , publish = timezone.now())
 
-    def test_obj_creation(self):
+    def test_model_unit(self):
         dept = Department.objects.get(department_name="Materials Engineering")
         subject = Subject.objects.get(subject_name="Physics III")
         post = Post.objects.get(title = "Create first Unit test")
@@ -44,3 +44,4 @@ class TestModels(TestCase):
         self.assertEqual(post.slug, "create-first-unit-test")
         self.assertEqual(post.get_absolute_url(), '/post/%s/%s/' % (post.id, post.slug))
         
+

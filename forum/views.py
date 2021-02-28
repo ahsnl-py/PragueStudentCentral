@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect, get_object_or_404
 from .models import Post, Department, Subject, Notif_User, UploadFiles
 from .forms import NewPost, NewPostUploads, NotifUser
+
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
@@ -71,7 +72,7 @@ def post_list(request):
     return render(request, 'forum/list.html', {'posts': posts})
 
 class PostDetailView(DetailView):
-    template_name = 'forum/detailed_2.html'
+    template_name = 'forum/detailed.html'
     model = Post
 
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -108,7 +109,6 @@ class PostCreateView(LoginRequiredMixin, CreateView):
             new_post.author = request.user
             new_post.status = 'published'
             new_post.save()
-            print(files)
             for f in files:
                 file_instance = UploadFiles(file_upload=f, feed=new_post)
                 file_instance.save()
