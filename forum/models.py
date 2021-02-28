@@ -72,22 +72,13 @@ class Post(models.Model):
 
     def __str__(self): 
         return self.title
-    
-    # def get_absolute_url(self):
-    #     return reverse('forum:post_detail',
-    #                    args=[self.publish.year,
-    #                          self.publish.month,
-    #                          self.publish.day,
-    #                          self.slug])
 
     def get_absolute_url(self):
-        return reverse('forum:post_detail',
-                        args=[self.pk, self.slug])
+        return reverse('forum:post_detail', args=[self.pk, self.slug])
 
 class UploadFiles(models.Model):
     file_upload = models.FileField(null=True, blank=True, upload_to='post_images/',)
     feed = models.ForeignKey(Post, on_delete=models.CASCADE)
-
 
 class Notif_User(models.Model):
     user_email = models.EmailField(max_length=100, unique = True)

@@ -146,7 +146,6 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             new_post.author = request.user
             new_post.status = 'published'
             new_post.save()
-            print(files)
             for f in files:
                 file_instance = UploadFiles(file_upload=f, feed=new_post)
                 file_instance.save()
